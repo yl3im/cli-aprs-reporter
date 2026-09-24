@@ -1,0 +1,19 @@
+# Your live configuration: it holds the APRS-IS passcode.
+# aprs.toml.example is the one that gets committed.
+aprs.toml
+
+# A direwolf.conf carries its passcode on the IGLOGIN line.
+direwolf.conf
+*.conf
+
+# Scratch notes
+_.txt
+
+# Machine-local tool settings
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

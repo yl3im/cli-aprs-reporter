@@ -1,0 +1,83 @@
+# aprs-reporter configuration - EXAMPLE
+#
+# Every callsign and passcode below is a placeholder. Replace them with your
+# own before running this, or you will beacon as N0CALL, which is not yours
+# and which many APRS-IS servers refuse outright.
+#
+#   cp aprs.toml.example aprs.toml
+#   $EDITOR aprs.toml
+#   chmod 600 aprs.toml          # it holds your passcode
+#
+# Check what it would send before sending anything:
+#
+#   aprs-reporter --dry-run aprs.toml
+
+[aprsis]
+server   = "euro.aprs2.net"  # rotate hostnames are fine, and preferred
+port     = 14580             # optional, defaults to 14580
+callsign = "N0CALL"          # YOUR callsign: the login, and the packet source
+passcode = "13023"           # YOUR APRS-IS passcode for that callsign
+tocall   = "APZ001"          # optional; identifies this software on the network
+
+
+# Your own station's position. Optional - delete the block, or leave it
+# commented out, to send nothing for yourself.
+#
+# [station]
+# lat     = 52.3740
+# lon     = 4.8897
+# symbol  = "/-"             # house
+# comment = "N0CALL"
+
+
+# One [[object]] block per object beaconed on another station's behalf.
+#
+# Required: name (max 9 characters), lat, lon.
+# Optional: symbol, comment, and the four antenna keys below.
+#
+#   power     watts
+#   height_m  metres above average terrain   \  one or the other,
+#   height_ft feet above average terrain     /  never both
+#   gain      antenna gain in dB
+#   dir       compass point, or a bearing in degrees; omit for omnidirectional
+#
+# Power is always watts. Height may be either unit, but the key has to name
+# it - there is no bare "height". Dire Wolf's HEIGHT is feet with nothing
+# saying so, which is how a config ends up reading 131 for a 40 m tower; if
+# you are copying from one, height_ft takes those numbers unchanged.
+#
+# Any one of those four present emits a PHG extension. The encoding is coarse
+# by design - power is stored as its square root, height as a power of two - so
+# the 25 W below survives exactly, while 30 m rounds to the 80 ft step.
+# That is the APRS format working correctly, not a rounding bug.
+
+# A directional site. If you set dir, set gain too: directivity is where gain
+# comes from, so a beam claiming 0 dB contradicts itself.
+[[object]]
+name     = "N0CALL-1"
+lat      = 52.3740
+lon      = 4.8897
+symbol   = "/r"
+power    = 25
+height_m = 30
+gain     = 6
+dir      = "NE"
+comment  = "Example repeater 145.750 -0.6 MHz"
+
+# An omnidirectional site - no dir, so the directivity digit is 0 - with the
+# height given in feet instead of metres.
+[[object]]
+name      = "N0CALL-2"
+lat       = 52.0907
+lon       = 5.1214
+symbol    = "/r"
+power     = 10
+height_ft = 100
+comment   = "Example repeater 430.250 +1.6 MHz"
+
+# The bare minimum: a name and a position.
+[[object]]
+name   = "N0CALL-3"
+lat    = 51.9244
+lon    = 4.4777
+symbol = "/r"
